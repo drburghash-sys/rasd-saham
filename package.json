@@ -1,0 +1,10 @@
+{
+  "name": "rasd-saham",
+  "private": true,
+  "version": "1.1.0",
+  "description": "تطبيق راصد تداول السعودي للتداول التجريبي",
+  "scripts": {
+    "test": "node tests/engine.test.js && node tests/app.smoke.js",
+    "check": "node --check engine.js && node --check app.js"
+  }
+}

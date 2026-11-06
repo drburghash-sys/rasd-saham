@@ -1,0 +1,24 @@
+const fs=require('node:fs');const vm=require('node:vm');const assert=require('node:assert/strict');
+const els={};for(const q of ['#view-content','#page-title','#page-subtitle','#status-pill','#refresh-btn','#toast','#modal-root'])els[q]={innerHTML:'',textContent:'',disabled:false,addEventListener(){},classList:{add(){},remove(){}}};
+els['#modal-root'].querySelector=()=>null;
+const handlers={};const store={};
+const document={querySelector(q){return els[q]||null},querySelectorAll(){return []},addEventListener(event,cb){handlers[event]=cb}};
+const window={RadarEngine:require('../engine.js'),addEventListener(){},scrollTo(){}};
+const context={window,document,localStorage:{getItem(k){return store[k]||null},setItem(k,v){store[k]=v}},setInterval(){},setTimeout(){},clearTimeout(){},Intl,Date,Number,String,Math,JSON,console,URL,AbortSignal,Blob,FormData,crypto:require('node:crypto').webcrypto};
+vm.runInNewContext(fs.readFileSync(require.resolve('../app.js'),'utf8'),context,{filename:'app.js'});
+assert.match(els['#view-content'].innerHTML,/محفظتك خالية/);
+assert.match(els['#view-content'].innerHTML,/نظرة|أسهم محفظتك/);
+assert.ok(handlers['click']&&handlers['submit']);
+handlers.click({target:{closest(sel){if(sel==='[data-view]')return {dataset:{view:'portfolio'}};return null}}});
+assert.match(els['#view-content'].innerHTML,/إضافة سهم/);
+function action(name,extra={}){handlers.click({target:{closest(sel){if(sel==='[data-view]')return null;if(sel==='[data-action]')return {dataset:{action:name,...extra}};return null}}})}
+action('load-demo');
+let state=JSON.parse(store['rasid-tadawul-v1']);
+assert.equal(state.stocks.length,2);assert.equal(state.snapshots.length,50);assert.equal(state.demo,true);
+action('confirm-delete',{symbol:'2222'});
+state=JSON.parse(store['rasid-tadawul-v1']);
+assert.equal(state.stocks.length,1);
+action('undo-delete');
+state=JSON.parse(store['rasid-tadawul-v1']);
+assert.equal(state.stocks.length,2);
+console.log('✓ Dashboard, navigation, sample data, deletion, and undo smoke tests passed');

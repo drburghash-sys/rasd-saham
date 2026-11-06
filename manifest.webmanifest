@@ -1,0 +1,26 @@
+{
+  "name": "راصد تداول — تحليل الأسهم السعودية",
+  "short_name": "راصد تداول",
+  "description": "تتبع الأسهم السعودية والتداول الوهمي دون تنفيذ صفقات حقيقية",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0d2037",
+  "theme_color": "#0d2037",
+  "dir": "rtl",
+  "lang": "ar",
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
