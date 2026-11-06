@@ -8,6 +8,8 @@ const context={window,document,localStorage:{getItem(k){return store[k]||null},s
 vm.runInNewContext(fs.readFileSync(require.resolve('../app.js'),'utf8'),context,{filename:'app.js'});
 assert.match(els['#view-content'].innerHTML,/محفظتك خالية/);
 assert.match(els['#view-content'].innerHTML,/نظرة|أسهم محفظتك/);
+assert.match(els['#view-content'].innerHTML,/0\.00/);
+assert.doesNotMatch(els['#view-content'].innerHTML,/50,000/);
 assert.ok(handlers['click']&&handlers['submit']);
 handlers.click({target:{closest(sel){if(sel==='[data-view]')return {dataset:{view:'portfolio'}};return null}}});
 assert.match(els['#view-content'].innerHTML,/إضافة سهم/);
