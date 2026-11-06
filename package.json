@@ -4,7 +4,7 @@
   "version": "1.2.0",
   "description": "تطبيق راصد تداول السعودي للتداول التجريبي",
   "scripts": {
-    "test": "node tests/engine.test.js && node tests/app.smoke.js",
-    "check": "node --check engine.js && node --check app.js"
+    "test": "node tests/engine.test.js && node tests/app.smoke.js && node tests/worker.test.js",
+    "check": "node --check engine.js && node --check app.js && node --check worker/index.js"
   }
 }
