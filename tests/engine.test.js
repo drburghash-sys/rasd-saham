@@ -8,6 +8,7 @@ assert.equal(E.rsi(Array.from({length:16},(_,i)=>10+i)),100);
 const p=E.positionFor({avg:40,qty:100},{price:30});
 assert.equal(p.pnl,-1000);assert.equal(p.percentage,-25);
 const p0=E.positionFor({avg:40,qty:100},null);assert.equal(p0.pnl,null);
+assert.equal(E.calculatePaper([],{}).cash,0);
 const pf=E.calculatePaper([
  {status:'filled',side:'buy',symbol:'2222',qty:100,price:10,fee:1.6,executedAt:'2026-01-01T10:00:00Z'},
  {status:'filled',side:'sell',symbol:'2222',qty:40,price:12,fee:.768,executedAt:'2026-01-02T10:00:00Z'}
