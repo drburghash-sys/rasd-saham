@@ -22,11 +22,12 @@ export default {
     if (!originOk) return reply({error:'المصدر غير مسموح'},403);
     if (request.method === 'OPTIONS') return new Response(null,{status:204,headers:cors});
     if (request.method !== 'GET') return reply({error:'الطريقة غير مدعومة'},405);
-    if (!env.APP_ACCESS_TOKEN || !env.SAHMK_API_KEY) return reply({error:'المفاتيح لم تُضبط على الخادم'},503);
+    if (!env.APP_ACCESS_TOKEN || !env.SAHMK_API_KEY || !allowed) return reply({error:'أكمل ضبط APP_ACCESS_TOKEN وSAHMK_API_KEY وALLOWED_ORIGIN في Worker'},503);
     const sent = request.headers.get('X-App-Token') || '';
     // Timing-safe comparison is not needed for an instructional rate-limited Worker, but never log tokens.
     if(sent.length!==env.APP_ACCESS_TOKEN.length || sent!==env.APP_ACCESS_TOKEN) return reply({error:'رمز الدخول غير صحيح'},401);
     const u = new URL(request.url);
+    if(u.pathname==='/health')return reply({ok:true,provider:'SAHMK',mode:'delayed',upstream_verified:false});
     if(u.pathname!=='/quote'&&u.pathname!=='/quote/')return reply({error:'المسار غير معروف'},404);
     const symbol=(u.searchParams.get('symbol')||'').trim();
     if(!/^\d{4,6}$/.test(symbol))return reply({error:'رمز السهم غير صالح'},400);
@@ -36,7 +37,7 @@ export default {
         signal:AbortSignal.timeout(12000),cf:{cacheTtl:0,cacheEverything:false}
       });
       const body=await upstream.json();
-      if(!upstream.ok)return reply({error:body?.error?.message||'مزود الأسعار لم يُرجع بيانات',upstream_status:upstream.status},upstream.status===429?429:502);
+      if(!upstream.ok)return reply({error:body?.error?.message||body?.detail||'مزود الأسعار لم يُرجع بيانات',upstream_status:upstream.status},upstream.status===429?429:502);
       const data=body?.data||body;
       const price=Number(data?.price),updatedAt=data?.updated_at;
       if(!(price>0)||!updatedAt||!Number.isFinite(Date.parse(updatedAt)))return reply({error:'لا توجد قراءة سعر صالحة أو توقيت محدد'},503);
