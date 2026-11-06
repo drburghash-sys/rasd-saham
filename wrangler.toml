@@ -1,0 +1,9 @@
+# Deploy only the delayed-quote API Worker from this repository.
+# The stock dashboard remains independently hosted on GitHub Pages.
+name = "rasd-saham-api"
+main = "worker/index.js"
+compatibility_date = "2026-11-06"
+workers_dev = true
+
+# Security: configure SAHMK_API_KEY, APP_ACCESS_TOKEN as Cloudflare Secrets
+# and ALLOWED_ORIGIN as a Cloudflare text variable. Never commit values here.
