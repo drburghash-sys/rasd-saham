@@ -76,7 +76,7 @@
     reasons.push('التحليل مبني على نقاط سعرية متباعدة، وليس شموعًا ساعة مكتملة أو توصية تداول.');
     return {status,tone,reasons,readings:prices.length,stale,e5,rsi:r,e10,last,fin:f};
   }
-  function calculatePaper(trades, quotes, initialCash=50000) {
+  function calculatePaper(trades, quotes, initialCash=0) {
     let cash=Number(initialCash), realized=0; const holdings={}, audit=[];
     for(const trade of [...trades].filter(t=>t.status==='filled').sort((a,b)=>a.executedAt.localeCompare(b.executedAt))){
       const q=Number(trade.qty),price=Number(trade.price),fee=Number(trade.fee);
